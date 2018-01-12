@@ -6,13 +6,14 @@ use Segment;
 
 class UserEventSubscriber
 {
-    public function onUserLogin($event) {
+    public function onUserLogin($event)
+    {
         Segment::identify([
-            "userId" => $event->user->id,
-            "traits" => [
-                "name"  => $event->user->name,
-                "email" => $event->user->email,
-            ]
+            'userId' => $event->user->id,
+            'traits' => [
+                'name'  => $event->user->name,
+                'email' => $event->user->email,
+            ],
         ]);
     }
 
