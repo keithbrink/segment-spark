@@ -3,11 +3,11 @@
 namespace Keithbrink\SegmentSpark;
 
 use Config;
+use Laravel\Spark\LocalInvoice;
+use Laravel\Spark\Subscription;
 use Illuminate\Support\ServiceProvider;
 use Keithbrink\SegmentSpark\Observers\LocalInvoiceObserver;
 use Keithbrink\SegmentSpark\Observers\SubscriptionObserver;
-use Laravel\Spark\LocalInvoice;
-use Laravel\Spark\Subscription;
 
 class SegmentSparkServiceProvider extends ServiceProvider
 {
