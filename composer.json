@@ -1,6 +1,6 @@
 {
     "name": "keithbrink/segment-spark",
-    "description": "This package adds Segment tracking events to tLaravel Spark, including eCommerce events.",
+    "description": "This package adds Segment tracking events to Laravel Spark, including eCommerce events.",
     "type": "library",
     "require": {
         "alt-three/segment": "^2.0"
