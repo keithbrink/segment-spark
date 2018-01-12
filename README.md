@@ -43,7 +43,7 @@ var segment_write_key = '*** UPDATE WRITE KEY ***';
 
 After you have set your write key and added the render function to your pages, the package will automatically track all of your page views (including the various tabs on the settings page) and will send events for eCommerce activity, such as viewing, subscribing, renewing, switching, or cancelling a plan. 
 
-Logged in users will be automatically tracked using their user ID ($user->id), and their name and email will be included as traits.
+Logged in users will be automatically tracked using their user ID ($user->id), and their entire user object will be included as traits.
 
 If you would like to track any custom events, you can use the original [AltThree/Segment](https://github.com/AltThree/Segment) facade.
 
