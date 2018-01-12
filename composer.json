@@ -1,0 +1,26 @@
+{
+    "name": "keithbrink/segment-spark",
+    "description": "This package adds Segment tracking events to tLaravel Spark, including eCommerce events.",
+    "type": "library",
+    "require": {
+        "alt-three/segment": "^2.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Keith Brink",
+            "email": "keith.brink@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Keithbrink\\SegmentSpark\\SegmentSparkServiceProvider"
+            ],
+            "aliases": {
+                "SegmentSpark": "Keithbrink\\SegmentSpark\\SegmentSparkFacade"
+            }
+        }
+    },
+}

@@ -1,0 +1,67 @@
+<?php
+
+namespace Keithbrink\SegmentSpark\Observers;
+
+use Laravel\Spark\Subscription;
+use Laravel\Spark\Spark;
+use Segment;
+
+class SubscriptionsObserver
+{
+    public function created(Subscription $subscription)
+    {
+        Segment::track(array(
+            "userId" => $subscription->user->id,
+            "event" => "Subscription Added",
+
+            "properties" => array(
+                "products" => array(array(
+                    "product_id" => $invoice->user->sparkPlan()->id,
+                    "sku" => $invoice->user->sparkPlan()->id,
+                    "name" => $invoice->user->sparkPlan()->name,
+                    "price" => $invoice->user->sparkPlan()->price,
+                    "quantity" => 1,
+                )),
+                "order_id" => $invoice->id,
+                "total" => $invoice->total,
+                "tax" => $invoice->tax,
+                "discount" => $invoice->total - $invoice->tax - $invoice->user->sparkPlan()->price,
+            )
+        )); 
+    }
+
+    public function updated(Subscription $subscription)
+    {
+        $plan = $subscription->user->availablePlans()->first(function ($value) use ($subscription) {
+            return $value->id === $subscription->provider_plan;
+        });
+        if($subscription->cancelled()) {
+            Segment::track(array(
+                "userId" => $subscription->user->id,
+                "event" => "Subscription Cancelled",
+                "properties" => 
+                    "products" => array(array(
+                        "product_id" => $plan->id,
+                        "sku" => $plan->id,
+                        "name" => $plan->name,
+                        "price" => $plan->price,
+                        "quantity" => 1,
+                )),
+            )); 
+        } else if ($subscription->active()) {
+            Segment::track(array(
+                "userId" => $subscription->user->id,
+                "event" => "Subscription Switched",
+                "properties" => 
+                    "products" => array(array(
+                        "product_id" => $plan->id,
+                        "sku" => $plan->id,
+                        "name" => $plan->name,
+                        "price" => $plan->price,
+                        "quantity" => 1,
+                )),
+            ));
+        }
+
+    }
+}
