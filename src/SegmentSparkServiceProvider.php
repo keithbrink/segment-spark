@@ -2,12 +2,12 @@
 
 namespace Keithbrink\SegmentSpark;
 
+use Config;
 use Illuminate\Support\ServiceProvider;
-use Laravel\Spark\Subscription;
-use Laravel\Spark\LocalInvoice;
 use Keithbrink\SegmentSpark\Observers\LocalInvoiceObserver;
 use Keithbrink\SegmentSpark\Observers\SubscriptionObserver;
-use Config;
+use Laravel\Spark\LocalInvoice;
+use Laravel\Spark\Subscription;
 
 class SegmentSparkServiceProvider extends ServiceProvider
 {
@@ -41,6 +41,5 @@ class SegmentSparkServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
     }
 }
