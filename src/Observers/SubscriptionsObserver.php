@@ -6,7 +6,7 @@ use Segment;
 use Laravel\Spark\Subscription;
 
 class SubscriptionsObserver
-{   
+{
     public function created(Subscription $subscription)
     {
         Segment::track([
@@ -22,7 +22,7 @@ class SubscriptionsObserver
                     'quantity' => 1,
                 ]],
             ],
-        ]); 
+        ]);
         Segment::flush();
     }
 
@@ -31,7 +31,7 @@ class SubscriptionsObserver
         $plan = $subscription->user->availablePlans()->first(function ($value) use ($subscription) {
             return $value->id === $subscription->provider_plan;
         });
-        if($subscription->cancelled()) {
+        if ($subscription->cancelled()) {
             Segment::track([
                 'userId' => $subscription->user->id,
                 'event' => 'Subscription Cancelled',
@@ -44,7 +44,7 @@ class SubscriptionsObserver
                         'quantity' => 1,
                     ]],
                 ],
-            ]); 
+            ]);
         } elseif ($subscription->active()) {
             Segment::track([
                 'userId' => $subscription->user->id,
