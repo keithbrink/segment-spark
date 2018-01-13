@@ -2,28 +2,27 @@
 
 namespace Keithbrink\SegmentSpark\Observers;
 
-use Laravel\Spark\Subscription;
-use Laravel\Spark\Spark;
 use Segment;
+use Laravel\Spark\Subscription;
 
 class SubscriptionsObserver
 {   
     public function created(Subscription $subscription)
     {
-        Segment::track(array(
-            "userId" => $subscription->user->id,
-            "event" => "Subscription Added",
+        Segment::track([
+            'userId' => $subscription->user->id,
+            'event' => 'Subscription Added',
 
-            "properties" => array(
-                "products" => array(array(
-                    "product_id" => $subscription->user->sparkPlan()->id,
-                    "sku" => $subscription->user->sparkPlan()->id,
-                    "name" => $subscription->user->sparkPlan()->name,
-                    "price" => $subscription->user->sparkPlan()->price,
-                    "quantity" => 1,
-                )),
-            )
-        )); 
+            'properties' => [
+                'products' => [[
+                    'product_id' => $subscription->user->sparkPlan()->id,
+                    'sku' => $subscription->user->sparkPlan()->id,
+                    'name' => $subscription->user->sparkPlan()->name,
+                    'price' => $subscription->user->sparkPlan()->price,
+                    'quantity' => 1,
+                ]],
+            ],
+        ]); 
         Segment::flush();
     }
 
@@ -33,33 +32,33 @@ class SubscriptionsObserver
             return $value->id === $subscription->provider_plan;
         });
         if($subscription->cancelled()) {
-            Segment::track(array(
-                "userId" => $subscription->user->id,
-                "event" => "Subscription Cancelled",
-                "properties" => array(
-                    "products" => array(array(
-                        "product_id" => $plan->id,
-                        "sku" => $plan->id,
-                        "name" => $plan->name,
-                        "price" => $plan->price,
-                        "quantity" => 1,
-                    )),
-                ),
-            )); 
-        } else if ($subscription->active()) {
-            Segment::track(array(
-                "userId" => $subscription->user->id,
-                "event" => "Subscription Switched",
-                "properties" => array(
-                    "products" => array(array(
-                        "product_id" => $plan->id,
-                        "sku" => $plan->id,
-                        "name" => $plan->name,
-                        "price" => $plan->price,
-                        "quantity" => 1,
-                    )),
-                )
-            ));
+            Segment::track([
+                'userId' => $subscription->user->id,
+                'event' => 'Subscription Cancelled',
+                'properties' => [
+                    'products' => [[
+                        'product_id' => $plan->id,
+                        'sku' => $plan->id,
+                        'name' => $plan->name,
+                        'price' => $plan->price,
+                        'quantity' => 1,
+                    ]],
+                ],
+            ]); 
+        } elseif ($subscription->active()) {
+            Segment::track([
+                'userId' => $subscription->user->id,
+                'event' => 'Subscription Switched',
+                'properties' => [
+                    'products' => [[
+                        'product_id' => $plan->id,
+                        'sku' => $plan->id,
+                        'name' => $plan->name,
+                        'price' => $plan->price,
+                        'quantity' => 1,
+                    ]],
+                ],
+            ]);
         }
         Segment::flush();
     }
