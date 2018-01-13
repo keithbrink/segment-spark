@@ -17,10 +17,7 @@
         "laravel": {
             "providers": [
                 "Keithbrink\\SegmentSpark\\SegmentSparkServiceProvider"
-            ],
-            "aliases": {
-                "SegmentSpark": "Keithbrink\\SegmentSpark\\SegmentSparkFacade"
-            }
+            ]
         }
     }
 }
