@@ -45,7 +45,7 @@ After you have set your write key and added the render function to your pages, t
 
 Logged in users will be automatically tracked using their user ID ($user->id), and their entire user object will be included as traits.
 
-If you would like to track any custom events, you can use the original [AltThree/Segment](https://github.com/AltThree/Segment) facade.
+If you would like to track any custom events, you can use the original [Segment](https://github.com/segmentio/analytics-php) class.
 
 ```bash
 Segment::track([
