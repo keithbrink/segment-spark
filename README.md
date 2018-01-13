@@ -39,11 +39,15 @@ You will also need to set your write key in the `segment-spark.js` file.
 var segment_write_key = '*** UPDATE WRITE KEY ***';
 ```
 
+Remember that you will need to run `npm run dev` to compile your assets.
+
 ## Usage
 
-After you have set your write key and added the render function to your pages, the package will automatically track all of your page views (including the various tabs on the settings page) and will send events for eCommerce activity, such as viewing, subscribing, renewing, switching, or cancelling a plan. 
+After you have set your write key and added Vue plugin to app.js, the package will automatically track all of your page views (including the various tabs on the settings page) and will send events for eCommerce activity, such as viewing, subscribing, renewing, switching, or cancelling a plan. 
 
 Logged in users will be automatically tracked using their user ID ($user->id), and their entire user object will be included as traits.
+
+If you are using Google Analytics, the server side events will automatically use the Google Analytics cookie to track events to correct user. Remember to set the server-side tracking ID in Segment's Google Analytics settings.
 
 If you would like to track any custom events, you can use the original [Segment](https://github.com/segmentio/analytics-php) class.
 

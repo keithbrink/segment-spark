@@ -7,6 +7,20 @@ use Laravel\Spark\Subscription;
 
 class SubscriptionsObserver
 {
+    public $context = [];
+
+    public function __construct() {
+        if(request()->cookie('_ga')) {
+            $client_id = str_replace('GA1.2.', '', request()->cookie('_ga'));
+            $context = [
+                'Google Analytics' => [
+                    'clientId' => $client_id,
+                ],
+            ];
+            $this->context = $context;
+        }
+    }
+
     public function created(Subscription $subscription)
     {
         Segment::track([
@@ -22,6 +36,7 @@ class SubscriptionsObserver
                     'quantity' => 1,
                 ]],
             ],
+            'context' => $this->context,
         ]);
         Segment::flush();
     }
@@ -44,6 +59,7 @@ class SubscriptionsObserver
                         'quantity' => 1,
                     ]],
                 ],
+                'context' => $this->context,
             ]);
         } elseif ($subscription->active()) {
             Segment::track([
@@ -58,6 +74,7 @@ class SubscriptionsObserver
                         'quantity' => 1,
                     ]],
                 ],
+                'context' => $this->context,
             ]);
         }
         Segment::flush();

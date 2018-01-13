@@ -7,6 +7,20 @@ use Laravel\Spark\LocalInvoice;
 
 class LocalInvoiceObserver
 {
+    public $context = [];
+
+    public function __construct() {
+        if(request()->cookie('_ga')) {
+            $client_id = str_replace('GA1.2.', '', request()->cookie('_ga'));
+            $context = [
+                'Google Analytics' => [
+                    'clientId' => $client_id,
+                ],
+            ];
+            $this->context = $context;
+        }
+    }
+
     public function created(LocalInvoice $invoice)
     {
         Segment::track([
@@ -24,8 +38,9 @@ class LocalInvoiceObserver
                 'order_id' => $invoice->id,
                 'total' => $invoice->total,
                 'tax' => $invoice->tax,
-                'discount' => $invoice->total - $invoice->tax - $invoice->user->sparkPlan()->price,
+                'discount' => $invoice->user->sparkPlan()->price - $invoice->total - $invoice->tax,
             ],
+            'context' => $this->context,
         ]);
         Segment::flush();
     }
