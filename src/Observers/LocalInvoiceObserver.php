@@ -9,8 +9,9 @@ class LocalInvoiceObserver
 {
     public $context = [];
 
-    public function __construct() {
-        if(request()->cookie('_ga')) {
+    public function __construct()
+    {
+        if (request()->cookie('_ga')) {
             $client_id = str_replace('GA1.2.', '', request()->cookie('_ga'));
             $context = [
                 'Google Analytics' => [
