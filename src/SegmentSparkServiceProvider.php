@@ -7,7 +7,8 @@ use Laravel\Spark\LocalInvoice;
 use Laravel\Spark\Subscription;
 use Illuminate\Support\ServiceProvider;
 use Keithbrink\SegmentSpark\Observers\LocalInvoiceObserver;
-use Keithbrink\SegmentSpark\Observers\SubscriptionObserver;
+use Keithbrink\SegmentSpark\Observers\SubscriptionsObserver;
+use Segment;
 
 class SegmentSparkServiceProvider extends ServiceProvider
 {
@@ -27,11 +28,11 @@ class SegmentSparkServiceProvider extends ServiceProvider
         ], 'resources');
 
         if ($write_key = $this->app->config->get('segment-spark.write_key')) {
-            $this->app->config->set('segment.write_key', $write_key);
+            Segment::init($write_key);
         }
 
         LocalInvoice::observe(LocalInvoiceObserver::class);
-        Subscription::observe(SubscriptionObserver::class);
+        Subscription::observe(SubscriptionsObserver::class);
     }
 
     /**

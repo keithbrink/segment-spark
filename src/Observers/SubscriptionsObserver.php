@@ -7,7 +7,7 @@ use Laravel\Spark\Spark;
 use Segment;
 
 class SubscriptionsObserver
-{
+{   
     public function created(Subscription $subscription)
     {
         Segment::track(array(
@@ -16,18 +16,15 @@ class SubscriptionsObserver
 
             "properties" => array(
                 "products" => array(array(
-                    "product_id" => $invoice->user->sparkPlan()->id,
-                    "sku" => $invoice->user->sparkPlan()->id,
-                    "name" => $invoice->user->sparkPlan()->name,
-                    "price" => $invoice->user->sparkPlan()->price,
+                    "product_id" => $subscription->user->sparkPlan()->id,
+                    "sku" => $subscription->user->sparkPlan()->id,
+                    "name" => $subscription->user->sparkPlan()->name,
+                    "price" => $subscription->user->sparkPlan()->price,
                     "quantity" => 1,
                 )),
-                "order_id" => $invoice->id,
-                "total" => $invoice->total,
-                "tax" => $invoice->tax,
-                "discount" => $invoice->total - $invoice->tax - $invoice->user->sparkPlan()->price,
             )
         )); 
+        Segment::flush();
     }
 
     public function updated(Subscription $subscription)
@@ -39,29 +36,31 @@ class SubscriptionsObserver
             Segment::track(array(
                 "userId" => $subscription->user->id,
                 "event" => "Subscription Cancelled",
-                "properties" => 
+                "properties" => array(
                     "products" => array(array(
                         "product_id" => $plan->id,
                         "sku" => $plan->id,
                         "name" => $plan->name,
                         "price" => $plan->price,
                         "quantity" => 1,
-                )),
+                    )),
+                ),
             )); 
         } else if ($subscription->active()) {
             Segment::track(array(
                 "userId" => $subscription->user->id,
                 "event" => "Subscription Switched",
-                "properties" => 
+                "properties" => array(
                     "products" => array(array(
                         "product_id" => $plan->id,
                         "sku" => $plan->id,
                         "name" => $plan->name,
                         "price" => $plan->price,
                         "quantity" => 1,
-                )),
+                    )),
+                )
             ));
         }
-
+        Segment::flush();
     }
 }

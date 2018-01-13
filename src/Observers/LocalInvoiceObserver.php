@@ -33,5 +33,6 @@ class LocalInvoiceObserver
                 "discount" => $invoice->total - $invoice->tax - $invoice->user->sparkPlan()->price,
             )
         )); 
+        Segment::flush();
     }
 }

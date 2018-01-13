@@ -3,7 +3,7 @@
     "description": "This package adds Segment tracking events to Laravel Spark, including eCommerce events.",
     "type": "library",
     "require": {
-        "alt-three/segment": "^2.0"
+        "segmentio/analytics-php": "1.*"
     },
     "license": "MIT",
     "authors": [
@@ -12,7 +12,7 @@
             "email": "keith.brink@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "extra": {
         "laravel": {
             "providers": [
