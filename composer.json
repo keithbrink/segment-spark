@@ -12,6 +12,11 @@
             "email": "keith.brink@gmail.com"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "Keithbrink\\SegmentSpark\\": "src/"
+        }
+    },
     "minimum-stability": "stable",
     "extra": {
         "laravel": {
