@@ -3,15 +3,16 @@
 namespace Keithbrink\SegmentSpark\Observers;
 
 use Segment;
-use Laravel\Spark\LocalInvoice;
 use Laravel\Spark\Spark;
+use Laravel\Spark\LocalInvoice;
 
 class LocalInvoiceObserver
 {
     public $context = [];
 
-    public function __construct() {
-        if(request()->cookie('_ga')) {
+    public function __construct()
+    {
+        if (request()->cookie('_ga')) {
             $client_id = str_replace('GA1.2.', '', request()->cookie('_ga'));
             $context = [
                 'Google Analytics' => [
@@ -25,8 +26,8 @@ class LocalInvoiceObserver
     public function created(LocalInvoice $invoice)
     {
         $discount_amount = $invoice->user->sparkPlan()->price - $invoice->total - $invoice->tax;
-        if(Spark::$billsUsing == 'stripe' && $discount_amount > 0) {
-            if($discount = $invoice->user->asStripeCustomer()->discount) {
+        if (Spark::$billsUsing == 'stripe' && $discount_amount > 0) {
+            if ($discount = $invoice->user->asStripeCustomer()->discount) {
                 $discount_code = $discount->coupon ? $discount->coupon->id : null;
             }
         }
