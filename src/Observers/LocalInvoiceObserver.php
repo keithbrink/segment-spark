@@ -4,6 +4,7 @@ namespace Keithbrink\SegmentSpark\Observers;
 
 use Segment;
 use Laravel\Spark\LocalInvoice;
+use Laravel\Spark\Spark;
 
 class LocalInvoiceObserver
 {
@@ -23,6 +24,12 @@ class LocalInvoiceObserver
 
     public function created(LocalInvoice $invoice)
     {
+        $discount_amount = $invoice->user->sparkPlan()->price - $invoice->total - $invoice->tax;
+        if(Spark::$billsUsing == 'stripe' && $discount_amount > 0) {
+            if($discount = $invoice->user->asStripeCustomer()->discount) {
+                $discount_code = $discount->coupon ? $discount->coupon->id : null;
+            }
+        }
         Segment::track([
             'userId' => $invoice->user->id,
             'event' => 'Order Completed',
@@ -39,6 +46,7 @@ class LocalInvoiceObserver
                 'total' => $invoice->total,
                 'tax' => $invoice->tax,
                 'discount' => $invoice->user->sparkPlan()->price - $invoice->total - $invoice->tax,
+                'coupon' => isset($discount_code) ? $discount_code : null,
             ],
             'context' => $this->context,
         ]);
