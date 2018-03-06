@@ -2,6 +2,7 @@
 
 namespace Keithbrink\SegmentSpark\Observers;
 
+use Cache;
 use Segment;
 use Laravel\Spark\Spark;
 use Laravel\Spark\LocalInvoice;
