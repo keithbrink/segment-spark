@@ -5,12 +5,10 @@ namespace Keithbrink\SegmentSpark;
 use Config;
 use Segment;
 use Laravel\Spark\LocalInvoice;
-use Laravel\Spark\Subscription;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Event;
-use Keithbrink\SegmentSpark\Observers\LocalInvoiceObserver;
-use Keithbrink\SegmentSpark\Observers\SubscriptionsObserver;
+use Illuminate\Support\ServiceProvider;
 use Keithbrink\SegmentSpark\Listeners\UserEventSubscriber;
+use Keithbrink\SegmentSpark\Observers\LocalInvoiceObserver;
 
 class SegmentSparkServiceProvider extends ServiceProvider
 {
