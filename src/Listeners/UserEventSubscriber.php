@@ -75,6 +75,7 @@ class UserEventSubscriber
      */
     public function getContext($user_id)
     {
+        $client_id = null;
         if (Cache::has('segment-spark-ga-client-id-user-id-'.$user_id)) {
             $client_id = Cache::get('segment-spark-ga-client-id-user-id-'.$user_id);
         } elseif (request()->hasCookie('_ga')) {
