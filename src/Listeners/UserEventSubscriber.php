@@ -2,15 +2,16 @@
 
 namespace Keithbrink\SegmentSpark\Listeners;
 
-use Segment;
 use Cache;
+use Segment;
 
 class UserEventSubscriber
 {
     /**
      * Handle user subscription added event.
      */
-    public function onUserSubscribed($event) {
+    public function onUserSubscribed($event)
+    {
         Segment::track([
             'userId' => $event->user->id,
             'event' => 'Subscription Added',
@@ -32,7 +33,8 @@ class UserEventSubscriber
     /**
      * Handle user subscription updated event.
      */
-    public function onUserSubscriptionUpdated($event) {
+    public function onUserSubscriptionUpdated($event)
+    {
         $plan = $event->user->subscription()->sparkPlan();
         if ($subscription->active()) {
             Segment::track([
@@ -56,7 +58,8 @@ class UserEventSubscriber
     /**
      * Handle user subscription cancelled event.
      */
-    public function onUserSubscriptionCancelled($event) {
+    public function onUserSubscriptionCancelled($event)
+    {
         Segment::track([
             'userId' => $event->user->id,
             'event' => 'Subscription Cancelled',
@@ -65,24 +68,26 @@ class UserEventSubscriber
     }
 
     /**
-     * Get the Google Analytics Client ID to send to Segment
-     * 
-     * The client ID is cached so that it can also be associated 
+     * Get the Google Analytics Client ID to send to Segment.
+     *
+     * The client ID is cached so that it can also be associated
      * with the first invoice / order completion
      */
-    public function getContext($user_id) {
-        if(Cache::has('segment-spark-ga-client-id-user-id-'.$user_id)) {
+    public function getContext($user_id)
+    {
+        if (Cache::has('segment-spark-ga-client-id-user-id-'.$user_id)) {
             $client_id = Cache::get('segment-spark-ga-client-id-user-id-'.$user_id);
-        } else if (request()->hasCookie('_ga')) {
+        } elseif (request()->hasCookie('_ga')) {
             $client_id = str_replace('GA1.2.', '', request()->cookie('_ga'));
             Cache::put('segment-spark-ga-client-id-user-id-'.$user_id, $client_id, 1440);
         }
-        if($client_id) {
+        if ($client_id) {
             $context = [
                 'Google Analytics' => [
                     'clientId' => $client_id,
                 ],
             ];
+
             return $context;
         }
     }
@@ -109,5 +114,4 @@ class UserEventSubscriber
             'Keithbrink\SegmentSpark\Listeners\UserEventSubscriber@onUserSubscriptionCancelled'
         );
     }
-
 }
