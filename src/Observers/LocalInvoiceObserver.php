@@ -10,16 +10,20 @@ class LocalInvoiceObserver
 {
     public $context = [];
 
-    public function __construct()
-    {
-        if (request()->cookie('_ga')) {
-            $client_id = str_replace('GA1.2.', '', request()->cookie('_ga'));
+    /**
+     * Get the Google Analytics Client ID to send to Segment
+     * from the cached result from the user event subscriber
+     * 
+     */
+    public function getContext($user_id) {
+        if(Cache::has('segment-spark-ga-client-id-user-id-'.$user_id)) {
+            $client_id = Cache::get('segment-spark-ga-client-id-user-id-'.$user_id);
             $context = [
                 'Google Analytics' => [
                     'clientId' => $client_id,
                 ],
             ];
-            $this->context = $context;
+            return $context;
         }
     }
 
@@ -49,7 +53,7 @@ class LocalInvoiceObserver
                 'discount' => $invoice->user->sparkPlan()->price - $invoice->total - $invoice->tax,
                 'coupon' => isset($discount_code) ? $discount_code : null,
             ],
-            'context' => $this->context,
+            'context' => $this->getContext($invoice->user->id),
         ]);
         Segment::flush();
     }

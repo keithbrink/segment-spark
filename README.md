@@ -41,6 +41,16 @@ var segment_write_key = '*** UPDATE WRITE KEY ***';
 
 Remember that you will need to run `npm run dev` to compile your assets.
 
+If you would like to associate server-side analytics requests with the client tracked by Google Analytics, you will need to add an exception for cookie encryption in the EncryptCookies middleware at `app\Http\Middleware\EncryptCookies.php`:
+
+```bash
+protected $except = [
+    '_ga',
+];
+```
+
+It's also a good idea to add [User-ID Tracking](https://segment.com/docs/destinations/google-analytics/#user-id) to Google Analytics. 
+
 ## Usage
 
 After you have set your write key and added Vue plugin to app.js, the package will automatically track all of your page views (including the various tabs on the settings page) and will send events for eCommerce activity, such as viewing, subscribing, renewing, switching, or cancelling a plan. 

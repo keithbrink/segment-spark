@@ -7,8 +7,10 @@ use Segment;
 use Laravel\Spark\LocalInvoice;
 use Laravel\Spark\Subscription;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Event;
 use Keithbrink\SegmentSpark\Observers\LocalInvoiceObserver;
 use Keithbrink\SegmentSpark\Observers\SubscriptionsObserver;
+use Keithbrink\SegmentSpark\Listeners\UserEventSubscriber;
 
 class SegmentSparkServiceProvider extends ServiceProvider
 {
@@ -32,7 +34,8 @@ class SegmentSparkServiceProvider extends ServiceProvider
         }
 
         LocalInvoice::observe(LocalInvoiceObserver::class);
-        Subscription::observe(SubscriptionsObserver::class);
+
+        Event::subscribe(UserEventSubscriber::class);
     }
 
     /**
