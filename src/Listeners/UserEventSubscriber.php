@@ -107,7 +107,7 @@ class UserEventSubscriber
 
         $events->listen(
             'Laravel\Spark\Events\Subscription\SubscriptionUpdated',
-            'Keithbrink\SegmentSpark\Listeners\UserEventSubscriber@onUserSubscriptionUpdate'
+            'Keithbrink\SegmentSpark\Listeners\UserEventSubscriber@onUserSubscriptionUpdated'
         );
 
         $events->listen(
