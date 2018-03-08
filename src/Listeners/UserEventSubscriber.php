@@ -68,6 +68,18 @@ class UserEventSubscriber
     }
 
     /**
+     * Handle user subscription cancelled event.
+     */
+    public function onUserRegistered($event)
+    {
+        Segment::track([
+            'userId' => $event->user->id,
+            'event' => 'User Registered',
+            'context' => $this->getContext($event->user->id),
+        ]);
+    }
+
+    /**
      * Get the Google Analytics Client ID to send to Segment.
      *
      * The client ID is cached so that it can also be associated
@@ -100,6 +112,11 @@ class UserEventSubscriber
      */
     public function subscribe($events)
     {
+        $events->listen(
+            'Laravel\Spark\Events\Auth\UserRegistered',
+            'Keithbrink\SegmentSpark\Listeners\UserEventSubscriber@onUserRegistered'
+        );
+
         $events->listen(
             'Laravel\Spark\Events\Subscription\UserSubscribed',
             'Keithbrink\SegmentSpark\Listeners\UserEventSubscriber@onUserSubscribed'
