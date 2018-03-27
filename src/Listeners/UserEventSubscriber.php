@@ -35,7 +35,7 @@ class UserEventSubscriber
      */
     public function onUserSubscriptionUpdated($event)
     {
-        $plan = $event->user->subscription()->sparkPlan();
+        $plan = $event->user->sparkPlan();
         if ($subscription->active()) {
             Segment::track([
                 'userId' => $event->user->id,
