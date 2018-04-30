@@ -4,8 +4,9 @@ namespace Keithbrink\SegmentSpark\Listeners;
 
 use Cache;
 use Segment;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class UserEventSubscriber
+class UserEventSubscriber implements ShouldQueue
 {
     /**
      * Handle user subscription added event.
@@ -36,6 +37,7 @@ class UserEventSubscriber
     public function onUserSubscriptionUpdated($event)
     {
         $plan = $event->user->sparkPlan();
+        $subscription = $event->user->subscription();
         if ($subscription->active()) {
             Segment::track([
                 'userId' => $event->user->id,
