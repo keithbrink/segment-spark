@@ -37,6 +37,15 @@ class LocalInvoiceObserver
                 $discount_code = $discount->coupon ? $discount->coupon->id : null;
             }
         }
+        if($invoice->user->localInvoices()->count() > 1) {
+            $integrations = [
+                'Google Analytics' => false,
+            ];
+        } else {
+            $integrations = [
+                'All' => true,
+            ]
+        }
         Segment::track([
             'userId' => $invoice->user->id,
             'event' => 'Order Completed',
@@ -55,6 +64,7 @@ class LocalInvoiceObserver
                 'discount' => $invoice->user->sparkPlan()->price - $invoice->total - $invoice->tax,
                 'coupon' => isset($discount_code) ? $discount_code : null,
             ],
+            "integrations" => $integrations,
             'context' => $this->getContext($invoice->user->id),
         ]);
         Segment::flush();
