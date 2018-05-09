@@ -37,14 +37,14 @@ class LocalInvoiceObserver
                 $discount_code = $discount->coupon ? $discount->coupon->id : null;
             }
         }
-        if($invoice->user->localInvoices()->count() > 1) {
+        if ($invoice->user->localInvoices()->count() > 1) {
             $integrations = [
                 'Google Analytics' => false,
             ];
         } else {
             $integrations = [
                 'All' => true,
-            ]
+            ];
         }
         Segment::track([
             'userId' => $invoice->user->id,
