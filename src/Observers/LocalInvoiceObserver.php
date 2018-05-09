@@ -64,7 +64,7 @@ class LocalInvoiceObserver
                 'discount' => $invoice->user->sparkPlan()->price - $invoice->total - $invoice->tax,
                 'coupon' => isset($discount_code) ? $discount_code : null,
             ],
-            "integrations" => $integrations,
+            'integrations' => $integrations,
             'context' => $this->getContext($invoice->user->id),
         ]);
         Segment::flush();
