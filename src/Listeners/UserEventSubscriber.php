@@ -4,9 +4,8 @@ namespace Keithbrink\SegmentSpark\Listeners;
 
 use Cache;
 use Segment;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
-class UserEventSubscriber implements ShouldQueue
+class UserEventSubscriber
 {
     /**
      * Handle user subscription added event.
