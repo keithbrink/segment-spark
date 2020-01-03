@@ -24,7 +24,7 @@ class SegmentSparkServiceProvider extends ServiceProvider
         ], 'config');
 
         $this->publishes([
-            __DIR__.'/resources/assets/js/segment-spark.js' => resource_path('assets/js/segment-spark.js'),
+            __DIR__.'/resources/assets/js/segment-spark.js' => resource_path('js/segment-spark.js'),
         ], 'resources');
 
         if ($write_key = $this->app->config->get('segment-spark.write_key')) {
