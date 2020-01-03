@@ -34,7 +34,7 @@ You can also optionally publish the `segment-spark.php` config file:
 $ php artisan vendor:publish --provider="KeithBrink\SegmentSpark\SegmentSparkServiceProvider" --tag=config
 ```
 
-The first publish command creates a `resources/assets/js/segment-spark.js` file, which is a Vue plugin you will need to include in your `resources/assets/js/app.js` file.
+The first publish command creates a `resources/js/segment-spark.js` file, which is a Vue plugin you will need to include in your `resources/js/app.js` file.
 
 ```bash
 var SegmentSpark = require('./segment-spark.js');
