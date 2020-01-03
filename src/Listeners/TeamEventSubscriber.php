@@ -5,16 +5,13 @@ namespace KeithBrink\SegmentSpark\Listeners;
 use Cache;
 use Segment;
 
-class UserEventSubscriber
+class TeamEventSubscriber
 {
-    /**
-     * Handle user subscription added event.
-     */
-    public function onUserSubscribed($event)
+    public function onTeamSubscribed($event)
     {
         Segment::track([
-            'userId' => $event->user->id,
-            'event' => 'Subscription Added',
+            'userId' => $event->team->owner_id,
+            'event' => 'Team Subscription Added',
 
             'properties' => [
                 'products' => [[
@@ -24,23 +21,22 @@ class UserEventSubscriber
                     'price' => $event->plan->price,
                     'quantity' => 1,
                 ]],
+                'companyId' => $event->team->id,
+                'companyName' => $event->team->name,
             ],
-            'context' => $this->getContext($event->user->id),
+            'context' => $this->getContext($event->team->owner_id),
         ]);
         Segment::flush();
     }
 
-    /**
-     * Handle user subscription updated event.
-     */
-    public function onUserSubscriptionUpdated($event)
+    public function onTeamSubscriptionUpdated($event)
     {
-        $plan = $event->user->sparkPlan();
-        $subscription = $event->user->subscription();
+        $plan = $event->team->sparkPlan();
+        $subscription = $event->team->subscription();
         if ($subscription->active()) {
             Segment::track([
-                'userId' => $event->user->id,
-                'event' => 'Subscription Switched',
+                'userId' => $event->team->owner_id,
+                'event' => 'Team Subscription Switched',
                 'properties' => [
                     'products' => [[
                         'product_id' => $plan->id,
@@ -49,34 +45,38 @@ class UserEventSubscriber
                         'price' => $plan->price,
                         'quantity' => 1,
                     ]],
+                    'companyId' => $event->team->id,
+                    'companyName' => $event->team->name,
                 ],
-                'context' => $this->getContext($event->user->id),
+                'context' => $this->getContext($event->team->owner_id),
             ]);
         }
         Segment::flush();
     }
 
-    /**
-     * Handle user subscription cancelled event.
-     */
-    public function onUserSubscriptionCancelled($event)
+    public function onTeamSubscriptionCancelled($event)
     {
         Segment::track([
-            'userId' => $event->user->id,
-            'event' => 'Subscription Cancelled',
-            'context' => $this->getContext($event->user->id),
+            'userId' => $event->team->owner_id,
+            'event' => 'Team Subscription Cancelled',
+            'properties' => [
+                'companyId' => $event->team->id,
+                'companyName' => $event->team->name,
+            ],
+            'context' => $this->getContext($event->team->owner_id),
         ]);
     }
 
-    /**
-     * Handle user subscription cancelled event.
-     */
-    public function onUserRegistered($event)
+    public function onTeamCreated($event)
     {
         Segment::track([
-            'userId' => $event->user->id,
-            'event' => 'User Registered',
-            'context' => $this->getContext($event->user->id),
+            'userId' => $event->team->owner_id,
+            'event' => 'Team Created',
+            'properties' => [
+                'companyId' => $event->team->id,
+                'companyName' => $event->team->name,
+            ],
+            'context' => $this->getContext($event->team->owner_id),
         ]);
     }
 
@@ -114,23 +114,23 @@ class UserEventSubscriber
     public function subscribe($events)
     {
         $events->listen(
-            'Laravel\Spark\Events\Auth\UserRegistered',
-            'KeithBrink\SegmentSpark\Listeners\UserEventSubscriber@onUserRegistered'
+            'Laravel\Spark\Events\Teams\TeamCreated',
+            'KeithBrink\SegmentSpark\Listeners\TeamEventSubscriber@onTeamCreated'
         );
 
         $events->listen(
-            'Laravel\Spark\Events\Subscription\UserSubscribed',
-            'KeithBrink\SegmentSpark\Listeners\UserEventSubscriber@onUserSubscribed'
+            'Laravel\Spark\Events\Teams\Subscription\TeamSubscribed',
+            'KeithBrink\SegmentSpark\Listeners\TeamEventSubscriber@onTeamSubscribed'
         );
 
         $events->listen(
-            'Laravel\Spark\Events\Subscription\SubscriptionUpdated',
-            'KeithBrink\SegmentSpark\Listeners\UserEventSubscriber@onUserSubscriptionUpdated'
+            'Laravel\Spark\Events\Teams\Subscription\SubscriptionUpdated',
+            'KeithBrink\SegmentSpark\Listeners\TeamEventSubscriber@onTeamSubscriptionUpdated'
         );
 
         $events->listen(
-            'Laravel\Spark\Events\Subscription\SubscriptionCancelled',
-            'KeithBrink\SegmentSpark\Listeners\UserEventSubscriber@onUserSubscriptionCancelled'
+            'Laravel\Spark\Events\Teams\Subscription\SubscriptionCancelled',
+            'KeithBrink\SegmentSpark\Listeners\TeamEventSubscriber@onTeamSubscriptionCancelled'
         );
     }
 }

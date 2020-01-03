@@ -1,4 +1,4 @@
-var segment_write_key = '*** UPDATE WRITE KEY ***';
+var segment_write_key = process.env.MIX_SEGMENT_WRITE_KEY;
 var ss_mounted = 0;
 
 const SegmentSpark = {
@@ -14,7 +14,13 @@ const SegmentSpark = {
 					    analytics.load(segment_write_key);
 					}}();
 				    if(this.user) {
-				    	analytics.identify(this.user.id, this.user);
+						var traits = this.user;
+						if(Object.entries(this.currentTeam).length) {
+							traits.company.name = this.currentTeam.name;
+							traits.company.id = this.currentTeam.id;
+							traits.company.plan = this.currentTeam.current_billing_plan;
+						}
+				    	analytics.identify(this.user.id, traits);
 				    }
 				}
 				if(window.location.href.indexOf("/settings") > -1) {

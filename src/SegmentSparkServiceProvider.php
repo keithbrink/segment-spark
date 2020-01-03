@@ -1,14 +1,14 @@
 <?php
 
-namespace Keithbrink\SegmentSpark;
+namespace KeithBrink\SegmentSpark;
 
-use Config;
-use Segment;
-use Laravel\Spark\LocalInvoice;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
-use Keithbrink\SegmentSpark\Listeners\UserEventSubscriber;
-use Keithbrink\SegmentSpark\Observers\LocalInvoiceObserver;
+use KeithBrink\SegmentSpark\Listeners\TeamEventSubscriber;
+use KeithBrink\SegmentSpark\Listeners\UserEventSubscriber;
+use KeithBrink\SegmentSpark\Observers\LocalInvoiceObserver;
+use Laravel\Spark\LocalInvoice;
+use Segment;
 
 class SegmentSparkServiceProvider extends ServiceProvider
 {
@@ -21,7 +21,7 @@ class SegmentSparkServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/../config/segment-spark.php' => config_path('segment-spark.php'),
-        ]);
+        ], 'config');
 
         $this->publishes([
             __DIR__.'/resources/assets/js/segment-spark.js' => resource_path('assets/js/segment-spark.js'),
@@ -29,11 +29,13 @@ class SegmentSparkServiceProvider extends ServiceProvider
 
         if ($write_key = $this->app->config->get('segment-spark.write_key')) {
             Segment::init($write_key);
+
+            LocalInvoice::observe(LocalInvoiceObserver::class);
+
+            Event::subscribe(UserEventSubscriber::class);
+
+            Event::subscribe(TeamEventSubscriber::class);
         }
-
-        LocalInvoice::observe(LocalInvoiceObserver::class);
-
-        Event::subscribe(UserEventSubscriber::class);
     }
 
     /**
@@ -43,5 +45,8 @@ class SegmentSparkServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/segment-spark.php', 'segment-spark'
+        );
     }
 }

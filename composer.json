@@ -14,14 +14,14 @@
     ],
     "autoload": {
         "psr-4": {
-            "Keithbrink\\SegmentSpark\\": "src/"
+            "KeithBrink\\SegmentSpark\\": "src/"
         }
     },
     "minimum-stability": "stable",
     "extra": {
         "laravel": {
             "providers": [
-                "Keithbrink\\SegmentSpark\\SegmentSparkServiceProvider"
+                "KeithBrink\\SegmentSpark\\SegmentSparkServiceProvider"
             ]
         }
     }
