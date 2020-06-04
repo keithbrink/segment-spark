@@ -15,7 +15,7 @@ const SegmentSpark = {
 					}}();
 				    if(this.user) {
 						var traits = this.user;
-						if(Object.entries(this.currentTeam).length) {
+						if(this.currentTeam && Object.entries(this.currentTeam).length) {
 							traits.company = {};
 							traits.company.name = this.currentTeam.name;
 							traits.company.id = this.currentTeam.id;
